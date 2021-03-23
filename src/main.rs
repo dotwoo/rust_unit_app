@@ -1,14 +1,13 @@
 /*
  * @Author: dotwoo
  * @Date: 2021-03-23 10:28:53
- * @LastEditTime: 2021-03-23 15:18:02
+ * @LastEditTime: 2021-03-23 15:45:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /rust_unit_app/src/main.rs
  */
 
 use gflags;
-use std::mem;
 use rust_unit_app::atoi;
 use rust_unit_app::intptr_t;
 use rust_unit_app::memset;
@@ -40,6 +39,7 @@ use rust_unit_app::nxt_unit_run;
 use rust_unit_app::uint16_t;
 use rust_unit_app::uint32_t;
 use rust_unit_app::uint8_t;
+use std::mem;
 
 gflags::define! {
     /// the threads num setting
@@ -49,6 +49,8 @@ gflags::define! {
 gflags::define! {
     -h, --help = false
 }
+
+static RETURNCONTENT: &str = "Rust: Hello world!";
 
 fn main() {
     gflags::parse();
@@ -76,7 +78,17 @@ unsafe fn uxt_main(threads: i32) {
 
 unsafe extern "C" fn greeting_app_request_handler(mut req: *mut nxt_unit_request_info_t) {
     let mut rc: libc::c_int = 0;
-    rc = nxt_unit_response_init(req, 200 as uint16_t, 1 as uint32_t, 0 as uint32_t);
+    rc = nxt_unit_response_init(
+        req,
+        200 as uint16_t,
+        1 as uint32_t,
+        RETURNCONTENT.len() as uint32_t,
+    );
+    rc = nxt_unit_response_add_content(
+        req,
+        RETURNCONTENT.as_ptr() as *const libc::c_void,
+        RETURNCONTENT.len() as uint32_t,
+    );
     rc = nxt_unit_response_send(req);
     nxt_unit_request_done(req, rc);
 }
