@@ -1,12 +1,11 @@
 /*
  * @Author: dotwoo
  * @Date: 2021-03-23 15:14:16
- * @LastEditTime: 2021-03-23 15:17:20
+ * @LastEditTime: 2021-03-23 16:54:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /rust_unit_app/src/lib.rs
  */
-
 
 #![allow(
     dead_code,
@@ -18,64 +17,47 @@
     unused_mut
 )]
 #![register_tool(c2rust)]
-#![feature(const_raw_ptr_to_usize_cast, extern_types,  register_tool)]
+#![feature(const_raw_ptr_to_usize_cast, extern_types, register_tool)]
 #[macro_use]
 extern crate c2rust_bitfields;
 
 extern "C" {
     pub type nxt_unit_response_s;
     pub type nxt_unit_websocket_frame_s;
-    #[no_mangle]
     pub fn nxt_unit_log(
         ctx: *mut nxt_unit_ctx_t,
         level: libc::c_int,
         fmt: *const libc::c_char,
         _: ...
     );
-    #[no_mangle]
     pub fn nxt_unit_free(ctx: *mut nxt_unit_ctx_t, p: *mut libc::c_void);
-    #[no_mangle]
     pub fn nxt_unit_malloc(ctx: *mut nxt_unit_ctx_t, size: size_t) -> *mut libc::c_void;
-    #[no_mangle]
     pub fn nxt_unit_request_done(req: *mut nxt_unit_request_info_t, rc: libc::c_int);
-    #[no_mangle]
     pub fn nxt_unit_request_read(
         req: *mut nxt_unit_request_info_t,
         dst: *mut libc::c_void,
         size: size_t,
     ) -> ssize_t;
-    #[no_mangle]
     pub fn memcpy(
         _: *mut libc::c_void,
         _: *const libc::c_void,
         _: libc::c_ulong,
     ) -> *mut libc::c_void;
-    #[no_mangle]
     pub fn memset(_: *mut libc::c_void, _: libc::c_int, _: libc::c_ulong) -> *mut libc::c_void;
-    #[no_mangle]
     pub fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
-    #[no_mangle]
     pub fn strerror(_: libc::c_int) -> *mut libc::c_char;
-    #[no_mangle]
     pub fn nxt_unit_buf_send(buf: *mut nxt_unit_buf_t) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_init(_: *mut nxt_unit_init_t) -> *mut nxt_unit_ctx_t;
-    #[no_mangle]
     pub fn nxt_unit_run(_: *mut nxt_unit_ctx_t) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_is_main_ctx(ctx: *mut nxt_unit_ctx_t) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_done(_: *mut nxt_unit_ctx_t);
-    #[no_mangle]
     pub fn nxt_unit_ctx_alloc(_: *mut nxt_unit_ctx_t, _: *mut libc::c_void) -> *mut nxt_unit_ctx_t;
-    #[no_mangle]
     pub fn nxt_unit_response_init(
         req: *mut nxt_unit_request_info_t,
         status: uint16_t,
         max_fields_count: uint32_t,
         max_fields_size: uint32_t,
     ) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_response_add_field(
         req: *mut nxt_unit_request_info_t,
         name: *const libc::c_char,
@@ -83,29 +65,23 @@ extern "C" {
         value: *const libc::c_char,
         value_length: uint32_t,
     ) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_response_add_content(
         req: *mut nxt_unit_request_info_t,
         src: *const libc::c_void,
         size: uint32_t,
     ) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_response_send(req: *mut nxt_unit_request_info_t) -> libc::c_int;
-    #[no_mangle]
     pub fn nxt_unit_response_buf_alloc(
         req: *mut nxt_unit_request_info_t,
         size: uint32_t,
     ) -> *mut nxt_unit_buf_t;
-    #[no_mangle]
     pub fn pthread_create(
         _: *mut pthread_t,
         _: *const pthread_attr_t,
         _: Option<unsafe extern "C" fn(_: *mut libc::c_void) -> *mut libc::c_void>,
         _: *mut libc::c_void,
     ) -> libc::c_int;
-    #[no_mangle]
     pub fn pthread_join(_: pthread_t, _: *mut *mut libc::c_void) -> libc::c_int;
-    #[no_mangle]
     pub fn atoi(_: *const libc::c_char) -> libc::c_int;
 }
 pub type __int32_t = libc::c_int;
@@ -321,9 +297,8 @@ pub const NXT_UNIT_LOG_WARN: C2RustUnnamed_0 = 2;
 pub const NXT_UNIT_LOG_ERR: C2RustUnnamed_0 = 1;
 pub const NXT_UNIT_LOG_ALERT: C2RustUnnamed_0 = 0;
 
-
 #[inline]
-pub unsafe extern "C"  fn copy(
+pub unsafe extern "C" fn copy(
     mut p: *mut libc::c_char,
     mut src: *const libc::c_void,
     mut len: uint32_t,
@@ -333,6 +308,6 @@ pub unsafe extern "C"  fn copy(
 }
 
 #[inline]
-pub unsafe extern "C"  fn nxt_unit_sptr_get(mut sptr: *mut nxt_unit_sptr_t) -> *mut libc::c_void {
+pub unsafe extern "C" fn nxt_unit_sptr_get(mut sptr: *mut nxt_unit_sptr_t) -> *mut libc::c_void {
     return (*sptr).base.as_mut_ptr().offset((*sptr).offset as isize) as *mut libc::c_void;
 }
